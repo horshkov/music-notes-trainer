@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Notes Trainer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 400px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 22px;
+            margin: 0;
+        }
+
+        .game-area {
+            padding: 20px;
+            min-height: 400px;
+        }
+
+        .question-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .note-display {
+            font-size: 48px;
+            font-weight: bold;
+            color: #667eea;
+            margin: 20px 0;
+        }
+
+        .octave-display {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .staff-container {
+            position: relative;
+            width: 100%;
+            height: 280px;
+            background: white;
+            border-radius: 10px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .staff-lines {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .staff-line {
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: #ccc;
+        }
+
+        .ledger-line {
+            position: absolute;
+            width: 40px;
+            height: 2px;
+            background: #ccc;
+            left: 50%;
+            transform: translateX(-50%);
+            display: none;
+        }
+
+        .note-button {
+            position: absolute;
+            width: 100%;
+            height: 18px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            left: 0;
+            transition: all 0.3s;
+            z-index: 10;
+        }
+        
+        .note-button::before {
+            content: '';
+            position: absolute;
+            width: 35px;
+            height: 28px;
+            border-radius: 50%;
+            background: transparent;
+            border: 3px solid transparent;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            transition: all 0.3s;
+        }
+
+        .note-button:hover {
+            background: rgba(118, 75, 162, 0.05);
+        }
+        
+        .note-button:hover::before {
+            background: rgba(118, 75, 162, 0.2);
+            border-color: #764ba2;
+        }
+
+        .note-button.correct::before {
+            background: #4CAF50;
+            border-color: #4CAF50;
+            animation: pulse 0.5s;
+        }
+
+        .note-button.wrong::before {
+            background: #f44336;
+            border-color: #f44336;
+            animation: shake 0.5s;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.3); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translate(-50%, -50%) rotate(0); }
+            25% { transform: translate(-55%, -50%) rotate(-5deg); }
+            75% { transform: translate(-45%, -50%) rotate(5deg); }
+        }
+
+        .feedback {
+            text-align: center;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            font-weight: bold;
+            display: none;
+        }
+
+        .feedback.correct {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .feedback.wrong {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        
+        .stats-numbers {
+            display: flex;
+            gap: 20px;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 20px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: #666;
+            margin-top: 2px;
+        }
+        
+        .level-dropdown {
+            position: relative;
+        }
+        
+        .level-dropdown select {
+            padding: 8px 12px;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            background: white;
+            color: #667eea;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .next-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: transform 0.3s;
+            display: none;
+        }
+
+        .next-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .clef-indicator {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 60px;
+            opacity: 0.3;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                border-radius: 0;
+                min-height: 100vh;
+            }
+            
+            .note-display {
+                font-size: 36px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎵 Music Notes Trainer</h1>
+        </div>
+
+        <div class="game-area">
+            <div class="question-card">
+                <div class="octave-display">Octave: <span id="octave">4</span></div>
+                <div class="note-display" id="note">C</div>
+                <p style="color: #999; font-size: 14px;">Click on the staff where this note should be placed</p>
+            </div>
+
+            <div class="staff-container">
+                <div class="clef-indicator">𝄞</div>
+                <div class="staff-lines">
+                    <!-- Staff lines (E, G, B, D, F from bottom to top) - adjusted for new height -->
+                    <div class="staff-line" style="top: 73%;"></div>
+                    <div class="staff-line" style="top: 59%;"></div>
+                    <div class="staff-line" style="top: 45%;"></div>
+                    <div class="staff-line" style="top: 31%;"></div>
+                    <div class="staff-line" style="top: 17%;"></div>
+                    
+                    <!-- Ledger lines (will be shown/hidden as needed) -->
+                    <div class="ledger-line" id="ledger-above-1" style="top: 5%;"></div>
+                    <div class="ledger-line" id="ledger-below-1" style="top: 95%;"></div>
+                </div>
+                
+                <!-- Note placement buttons with better spacing for mobile -->
+                <!-- Above staff -->
+                <button class="note-button" data-note="G" data-octave="5" style="top: 3%;"></button>
+                <button class="note-button" data-note="F" data-octave="5" style="top: 10%;"></button>
+                
+                <!-- On staff lines - more spacing -->
+                <button class="note-button" data-note="E" data-octave="5" style="top: 17%;"></button>
+                <button class="note-button" data-note="D" data-octave="5" style="top: 24%;"></button>
+                <button class="note-button" data-note="C" data-octave="5" style="top: 31%;"></button>
+                <button class="note-button" data-note="B" data-octave="4" style="top: 38%;"></button>
+                <button class="note-button" data-note="A" data-octave="4" style="top: 45%;"></button>
+                <button class="note-button" data-note="G" data-octave="4" style="top: 52%;"></button>
+                <button class="note-button" data-note="F" data-octave="4" style="top: 59%;"></button>
+                <button class="note-button" data-note="E" data-octave="4" style="top: 66%;"></button>
+                <button class="note-button" data-note="D" data-octave="4" style="top: 73%;"></button>
+                
+                <!-- Below staff -->
+                <button class="note-button" data-note="C" data-octave="4" style="top: 80%;"></button>
+                <button class="note-button" data-note="B" data-octave="3" style="top: 87%;"></button>
+            </div>
+
+            <div class="feedback" id="feedback"></div>
+
+            <button class="next-btn" id="nextBtn">Next Note →</button>
+
+            <div class="stats">
+                <div class="stats-numbers">
+                    <div class="stat">
+                        <div class="stat-value" id="correct">0</div>
+                        <div class="stat-label">Correct</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value" id="wrong">0</div>
+                        <div class="stat-label">Wrong</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value" id="streak">0</div>
+                        <div class="stat-label">Streak</div>
+                    </div>
+                </div>
+                <div class="level-dropdown">
+                    <select id="levelSelect">
+                        <option value="1">Beginner</option>
+                        <option value="2" selected>Intermediate</option>
+                        <option value="3">Maestro</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Game state
+        let currentLevel = 2; // Default to Intermediate
+        let currentNote = { note: 'C', octave: 4 };
+        let stats = { correct: 0, wrong: 0, streak: 0 };
+        let answered = false;
+
+        // Note ranges for different levels
+        const levels = {
+            1: { // Beginner - Middle C area
+                notes: [
+                    { note: 'C', octave: 4 },
+                    { note: 'D', octave: 4 },
+                    { note: 'E', octave: 4 },
+                    { note: 'F', octave: 4 },
+                    { note: 'G', octave: 4 },
+                    { note: 'A', octave: 4 },
+                    { note: 'B', octave: 4 },
+                    { note: 'C', octave: 5 }
+                ]
+            },
+            2: { // Intermediate - Extended range
+                notes: [
+                    { note: 'B', octave: 3 },
+                    { note: 'C', octave: 4 },
+                    { note: 'D', octave: 4 },
+                    { note: 'E', octave: 4 },
+                    { note: 'F', octave: 4 },
+                    { note: 'G', octave: 4 },
+                    { note: 'A', octave: 4 },
+                    { note: 'B', octave: 4 },
+                    { note: 'C', octave: 5 },
+                    { note: 'D', octave: 5 },
+                    { note: 'E', octave: 5 },
+                    { note: 'F', octave: 5 }
+                ]
+            },
+            3: { // Maestro - Full range with ledger lines
+                notes: [
+                    { note: 'B', octave: 3 },
+                    { note: 'C', octave: 4 },
+                    { note: 'D', octave: 4 },
+                    { note: 'E', octave: 4 },
+                    { note: 'F', octave: 4 },
+                    { note: 'G', octave: 4 },
+                    { note: 'A', octave: 4 },
+                    { note: 'B', octave: 4 },
+                    { note: 'C', octave: 5 },
+                    { note: 'D', octave: 5 },
+                    { note: 'E', octave: 5 },
+                    { note: 'F', octave: 5 },
+                    { note: 'G', octave: 5 }
+                ]
+            }
+        };
+
+        // Initialize
+        function init() {
+            generateNewNote();
+            attachEventListeners();
+        }
+
+        // Generate new note
+        function generateNewNote() {
+            const levelNotes = levels[currentLevel].notes;
+            const randomIndex = Math.floor(Math.random() * levelNotes.length);
+            currentNote = levelNotes[randomIndex];
+            
+            document.getElementById('note').textContent = currentNote.note;
+            document.getElementById('octave').textContent = currentNote.octave;
+            
+            // Reset UI
+            answered = false;
+            document.getElementById('feedback').style.display = 'none';
+            document.getElementById('nextBtn').style.display = 'none';
+            
+            // Reset note buttons
+            document.querySelectorAll('.note-button').forEach(btn => {
+                btn.classList.remove('correct', 'wrong');
+            });
+            
+            // Update ledger lines visibility
+            updateLedgerLines();
+        }
+
+        // Update ledger lines based on current note
+        function updateLedgerLines() {
+            const ledgerAbove = document.getElementById('ledger-above-1');
+            const ledgerBelow = document.getElementById('ledger-below-1');
+            
+            // Show ledger lines for notes that need them
+            if (currentNote.note === 'G' && currentNote.octave === 5) {
+                ledgerAbove.style.display = 'block';
+            } else {
+                ledgerAbove.style.display = 'none';
+            }
+            
+            if (currentNote.note === 'B' && currentNote.octave === 3) {
+                ledgerBelow.style.display = 'block';
+            } else {
+                ledgerBelow.style.display = 'none';
+            }
+        }
+
+        // Check answer
+        function checkAnswer(selectedNote, selectedOctave, button) {
+            if (answered) return;
+            
+            answered = true;
+            const isCorrect = selectedNote === currentNote.note && selectedOctave === currentNote.octave;
+            
+            const feedback = document.getElementById('feedback');
+            
+            if (isCorrect) {
+                button.classList.add('correct');
+                feedback.textContent = 'Correct! Well done!';
+                feedback.className = 'feedback correct';
+                stats.correct++;
+                stats.streak++;
+                
+                // Auto-advance after correct answer
+                setTimeout(() => {
+                    generateNewNote();
+                }, 1500);
+            } else {
+                button.classList.add('wrong');
+                feedback.textContent = `Wrong! You selected ${selectedNote}${selectedOctave}. The correct answer is ${currentNote.note}${currentNote.octave}`;
+                feedback.className = 'feedback wrong';
+                stats.wrong++;
+                stats.streak = 0;
+                
+                // Show correct position
+                document.querySelectorAll('.note-button').forEach(btn => {
+                    if (btn.dataset.note === currentNote.note && 
+                        parseInt(btn.dataset.octave) === currentNote.octave) {
+                        btn.classList.add('correct');
+                    }
+                });
+                
+                // Auto-advance after wrong answer
+                setTimeout(() => {
+                    generateNewNote();
+                }, 2500);
+            }
+            
+            feedback.style.display = 'block';
+            updateStats();
+        }
+
+        // Update statistics
+        function updateStats() {
+            document.getElementById('correct').textContent = stats.correct;
+            document.getElementById('wrong').textContent = stats.wrong;
+            document.getElementById('streak').textContent = stats.streak;
+        }
+
+        // Attach event listeners
+        function attachEventListeners() {
+            // Level dropdown
+            document.getElementById('levelSelect').addEventListener('change', function() {
+                currentLevel = parseInt(this.value);
+                generateNewNote();
+            });
+            
+            // Note buttons
+            document.querySelectorAll('.note-button').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const note = this.dataset.note;
+                    const octave = parseInt(this.dataset.octave);
+                    checkAnswer(note, octave, this);
+                });
+            });
+            
+            // Next button
+            document.getElementById('nextBtn').addEventListener('click', generateNewNote);
+        }
+
+        // Start the game
+        init();
+    </script>
+</body>
+</html>

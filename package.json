@@ -1,0 +1,15 @@
+{
+  "name": "music-notes-trainer",
+  "version": "1.0.0",
+  "description": "A mobile-first web app to help memorize music sheet notes",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}

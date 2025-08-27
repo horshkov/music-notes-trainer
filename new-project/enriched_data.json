@@ -1,0 +1,33 @@
+{
+  "1lt3cy4": {
+    "post_id": "1lt3cy4",
+    "original_post": {
+      "id": "1lt3cy4",
+      "title": "BTC  Might go higher and higher soon?",
+      "author": "PlatformPatient6225",
+      "created": "2025-07-06T15:02:50.000Z",
+      "score": 103,
+      "num_comments": 48,
+      "url": "https://i.redd.it/j1vx1b6pq9bf1.jpeg",
+      "selftext": "Price action is starting to look strong again, and momentum seems to be building.\n\nBitcoin might be gearing up for another leg up.",
+      "subreddit": "Bitcoin",
+      "permalink": "https://reddit.com/r/Bitcoin/comments/1lt3cy4/btc_might_go_higher_and_higher_soon/",
+      "query": "bitcoin trading"
+    },
+    "enrichment": {
+      "analysis": "This is a relatively basic sentiment-driven post lacking substantive technical or fundamental analysis. The author appears to be making observations based primarily on recent price action without providing specific data points or analytical reasoning to support the bullish outlook.",
+      "sentiment": "bullish",
+      "credibility": "low",
+      "key_points": [
+        "Price action showing upward momentum",
+        "Lacks specific technical indicators or analysis",
+        "Sentiment-based rather than data-driven observation"
+      ],
+      "trading_relevance": 3,
+      "market_context": "Bitcoin has been showing increased volatility in recent weeks amid broader market uncertainty around macro factors like interest rates and regulatory developments. Institutional interest remains a key driver of price action.",
+      "risk_assessment": "Basing trading decisions on sentiment-only posts without technical analysis or fundamental drivers carries significant risk. Traders should conduct thorough research and consider multiple data points before taking positions.",
+      "timestamp": "2025-07-06T17:58:42.670Z",
+      "model_used": "claude-3-5-sonnet-20241022"
+    }
+  }
+}

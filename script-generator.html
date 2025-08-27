@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content Script Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+        
+        .form-section {
+            padding: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+        
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #666;
+            border: 2px solid #e1e5e9;
+        }
+        
+        .btn-secondary:hover {
+            background: #e9ecef;
+        }
+        
+        .output-section {
+            background: #f8f9fa;
+            border-top: 1px solid #e1e5e9;
+            padding: 30px;
+            display: none;
+        }
+        
+        .output-content {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e1e5e9;
+            white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
+            line-height: 1.5;
+        }
+        
+        .copy-btn {
+            margin-top: 15px;
+            padding: 8px 16px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .copy-btn:hover {
+            background: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Content Script Generator</h1>
+            <p>Generate structured content scripts for your business needs</p>
+        </div>
+        
+        <div class="form-section">
+            <form id="scriptForm">
+                <div class="form-group">
+                    <label for="topic">Pain Points</label>
+                    <textarea id="topic" name="topic" placeholder="Enter the user pain point" required></textarea>
+                </div>
+                
+                <div class="button-group">
+                    <button type="button" class="btn btn-primary" onclick="generateMarketingAnalysis()">🎯 Generate Marketing Analysis</button>
+                </div>
+                
+                <div class="form-group">
+                    <label for="audience">Target Audience</label>
+                    <select id="audience" name="audience" required>
+                        <option value="">Select target audience</option>
+                        <option value="general">General Public</option>
+                        <option value="business">Business Professionals</option>
+                        <option value="technical">Technical Team</option>
+                        <option value="clients">Clients</option>
+                        <option value="internal">Internal Team</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="format">Content Format</label>
+                    <select id="format" name="format" required>
+                        <option value="">Select content format</option>
+                        <option value="presentation">Presentation Script</option>
+                        <option value="tutorial">Tutorial/How-to</option>
+                        <option value="explanation">Explanation/Overview</option>
+                        <option value="announcement">Announcement</option>
+                        <option value="training">Training Material</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="keyPoints">Key Points (one per line)</label>
+                    <textarea id="keyPoints" name="keyPoints" placeholder="Enter main points you want to cover, one per line" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="duration">Estimated Duration</label>
+                    <select id="duration" name="duration" required>
+                        <option value="">Select duration</option>
+                        <option value="short">Short (1-3 minutes)</option>
+                        <option value="medium">Medium (3-5 minutes)</option>
+                        <option value="long">Long (5-10 minutes)</option>
+                        <option value="extended">Extended (10+ minutes)</option>
+                    </select>
+                </div>
+                
+                <div class="button-group">
+                    <button type="submit" class="btn btn-primary">Generate Script</button>
+                    <button type="button" class="btn btn-secondary" onclick="clearForm()">Clear Form</button>
+                </div>
+            </form>
+        </div>
+        
+        <div class="output-section" id="outputSection">
+            <h3>Marketing Analysis</h3>
+            <div class="output-content" id="generatedScript"></div>
+            <button class="copy-btn" onclick="copyScript()">Copy to Clipboard</button>
+        </div>
+    </div>
+    
+    <script>
+        document.getElementById('scriptForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            generateScript();
+        });
+        
+        function generateScript() {
+            const formData = new FormData(document.getElementById('scriptForm'));
+            const data = Object.fromEntries(formData);
+            
+            if (!data.topic || !data.audience || !data.format || !data.keyPoints || !data.duration) {
+                alert('Please fill in all required fields');
+                return;
+            }
+            
+            const keyPointsArray = data.keyPoints.split('\n').filter(point => point.trim());
+            
+            const script = buildScript(data, keyPointsArray);
+            
+            document.getElementById('generatedScript').textContent = script;
+            document.getElementById('outputSection').style.display = 'block';
+            document.getElementById('outputSection').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function buildScript(data, keyPoints) {
+            const templates = {
+                presentation: buildPresentationScript,
+                tutorial: buildTutorialScript,
+                explanation: buildExplanationScript,
+                announcement: buildAnnouncementScript,
+                training: buildTrainingScript
+            };
+            
+            return templates[data.format](data, keyPoints);
+        }
+        
+        function buildPresentationScript(data, keyPoints) {
+            return `PRESENTATION SCRIPT: ${data.topic}
+
+TARGET AUDIENCE: ${data.audience}
+DURATION: ${data.duration}
+
+INTRODUCTION:
+Good [morning/afternoon], everyone. Today I'll be presenting on ${data.topic}.
+
+MAIN CONTENT:
+${keyPoints.map((point, index) => `
+${index + 1}. ${point}
+   [Elaborate on this point - provide context, examples, or details]
+`).join('')}
+
+CONCLUSION:
+To summarize, we've covered:
+${keyPoints.map((point, index) => `- ${point}`).join('\n')}
+
+Thank you for your attention. Are there any questions?
+
+NOTES:
+- Adjust timing based on audience engagement
+- Use visual aids where appropriate
+- Allow time for Q&A`;
+        }
+        
+        function buildTutorialScript(data, keyPoints) {
+            return `TUTORIAL SCRIPT: ${data.topic}
+
+TARGET AUDIENCE: ${data.audience}
+DURATION: ${data.duration}
+
+INTRODUCTION:
+Welcome to this tutorial on ${data.topic}. By the end of this session, you'll understand:
+${keyPoints.map(point => `- ${point}`).join('\n')}
+
+STEP-BY-STEP GUIDE:
+${keyPoints.map((point, index) => `
+STEP ${index + 1}: ${point}
+[Provide detailed instructions]
+[Include any warnings or tips]
+[Show expected results]
+`).join('')}
+
+WRAP-UP:
+Great job! You've now learned how to:
+${keyPoints.map(point => `- ${point}`).join('\n')}
+
+NEXT STEPS:
+[Suggest practice exercises or additional resources]`;
+        }
+        
+        function buildExplanationScript(data, keyPoints) {
+            return `EXPLANATION SCRIPT: ${data.topic}
+
+TARGET AUDIENCE: ${data.audience}
+DURATION: ${data.duration}
+
+OVERVIEW:
+Today we'll explore ${data.topic}, covering these key areas:
+${keyPoints.map(point => `- ${point}`).join('\n')}
+
+DETAILED EXPLANATION:
+${keyPoints.map((point, index) => `
+${index + 1}. ${point}
+   What this means: [Provide clear explanation]
+   Why it matters: [Explain significance]
+   Example: [Give relevant example]
+`).join('')}
+
+SUMMARY:
+In conclusion, ${data.topic} involves:
+${keyPoints.map(point => `- ${point}`).join('\n')}
+
+This understanding will help you [explain benefits or applications].`;
+        }
+        
+        function buildAnnouncementScript(data, keyPoints) {
+            return `ANNOUNCEMENT SCRIPT: ${data.topic}
+
+TARGET AUDIENCE: ${data.audience}
+DURATION: ${data.duration}
+
+OPENING:
+I have an important announcement regarding ${data.topic}.
+
+KEY INFORMATION:
+${keyPoints.map((point, index) => `
+${index + 1}. ${point}
+   [Provide relevant details and context]
+`).join('')}
+
+WHAT THIS MEANS FOR YOU:
+[Explain impact on audience]
+
+NEXT STEPS:
+[Outline any actions required]
+
+CLOSING:
+Thank you for your attention. If you have any questions, please [provide contact method].`;
+        }
+        
+        function buildTrainingScript(data, keyPoints) {
+            return `TRAINING SCRIPT: ${data.topic}
+
+TARGET AUDIENCE: ${data.audience}
+DURATION: ${data.duration}
+
+LEARNING OBJECTIVES:
+By the end of this training, participants will be able to:
+${keyPoints.map(point => `- ${point}`).join('\n')}
+
+TRAINING MODULES:
+${keyPoints.map((point, index) => `
+MODULE ${index + 1}: ${point}
+   Content: [Key concepts to cover]
+   Activity: [Hands-on exercise or discussion]
+   Assessment: [How to verify understanding]
+`).join('')}
+
+CONCLUSION:
+Let's review what we've learned:
+${keyPoints.map(point => `- ${point}`).join('\n')}
+
+EVALUATION:
+[Include feedback form or assessment method]
+
+RESOURCES:
+[List additional materials or references]`;
+        }
+        
+        function copyScript() {
+            const script = document.getElementById('generatedScript').textContent;
+            navigator.clipboard.writeText(script).then(() => {
+                const btn = document.querySelector('.copy-btn');
+                const originalText = btn.textContent;
+                btn.textContent = 'Copied!';
+                btn.style.background = '#28a745';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.style.background = '#28a745';
+                }, 2000);
+            }).catch(() => {
+                alert('Could not copy to clipboard. Please select and copy manually.');
+            });
+        }
+        
+        function generateMarketingAnalysis() {
+            const painPoint = document.getElementById('topic').value.trim();
+            
+            if (!painPoint) {
+                alert('Please enter a pain point first!');
+                return;
+            }
+            
+            // Extract key insights from the pain point
+            const analysis = analyzePainPoint(painPoint);
+            
+            // Generate marketing analysis
+            const marketingAnalysis = `**STRATEGIC MARKETING ANALYSIS**
+
+**INPUT ANALYSIS:**
+Pain Point Source: User Input
+
+**1. PAIN POINT PROFILE**
+- Core frustration: ${analysis.coreFrustration}
+- Emotional impact: ${analysis.emotionalImpact}
+- Functional impact: ${analysis.functionalImpact}
+- Frequency/severity: ${analysis.frequency}
+- Current workarounds: ${analysis.workarounds}
+
+**2. MESSAGE ASSUMPTIONS TO TEST**
+
+**Assumption A - Problem Agitation:**
+- Message: "${analysis.messages.agitation}"
+- Hypothesis: "Users will respond because this validates their frustration"
+- Test metric: Click-through rate / Engagement
+
+**Assumption B - Solution Focus:**
+- Message: "${analysis.messages.solution}"
+- Hypothesis: "Users will respond because this promises relief"
+- Test metric: Conversion rate / Sign-ups
+
+**Assumption C - Outcome Benefit:**
+- Message: "${analysis.messages.outcome}"
+- Hypothesis: "Users will respond because this shows life improvement"
+- Test metric: Time on page / Content shares
+
+**3. TESTING FRAMEWORK**
+- Primary success metric: ${analysis.testing.primaryMetric}
+- Secondary indicators: ${analysis.testing.secondaryIndicators}
+- Target audience segment: ${analysis.testing.targetAudience}
+- Testing timeline: ${analysis.testing.timeline}
+- Success threshold: ${analysis.testing.successThreshold}
+
+**ACTIONABLE NEXT STEPS:**
+${analysis.nextSteps.map(step => `• ${step}`).join('\n')}`;
+            
+            document.getElementById('generatedScript').textContent = marketingAnalysis;
+            document.getElementById('outputSection').style.display = 'block';
+            document.getElementById('outputSection').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function analyzePainPoint(painPoint) {
+            // Analyze pain point and extract key elements
+            const lowerPain = painPoint.toLowerCase();
+            
+            // Determine core frustration based on keywords
+            let coreFrustration = "Users feel excluded from profitable opportunities";
+            if (lowerPain.includes('fomo') || lowerPain.includes('missing out')) {
+                coreFrustration = "Fear of missing out on profitable trading opportunities";
+            } else if (lowerPain.includes('access') || lowerPain.includes('restricted')) {
+                coreFrustration = "Limited access to advanced trading instruments";
+            } else if (lowerPain.includes('leverage') || lowerPain.includes('futures')) {
+                coreFrustration = "Inability to use sophisticated trading tools";
+            }
+            
+            // Determine emotional impact
+            let emotionalImpact = "Frustrated, envious, left behind";
+            if (lowerPain.includes('angry') || lowerPain.includes('resentment')) {
+                emotionalImpact = "Angry, resentful, discriminated against";
+            } else if (lowerPain.includes('anxious') || lowerPain.includes('worried')) {
+                emotionalImpact = "Anxious, worried, inadequate";
+            }
+            
+            // Generate messages based on pain point content
+            const messages = {
+                agitation: generateAgitationMessage(lowerPain),
+                solution: generateSolutionMessage(lowerPain),
+                outcome: generateOutcomeMessage(lowerPain)
+            };
+            
+            return {
+                coreFrustration,
+                emotionalImpact,
+                functionalImpact: "Cannot access high-leverage trading or advanced instruments",
+                frequency: "Daily during market volatility and trending opportunities",
+                workarounds: "Using VPNs, offshore exchanges, or settling for basic products",
+                messages,
+                testing: {
+                    primaryMetric: "Click-through rate on targeted ads",
+                    secondaryIndicators: "Engagement time, scroll depth, social shares",
+                    targetAudience: "Active retail traders aged 25-45",
+                    timeline: "2-week A/B test minimum",
+                    successThreshold: "15% improvement over baseline"
+                },
+                nextSteps: [
+                    "Create three ad variations using these message approaches",
+                    "Set up A/B testing framework with proper tracking",
+                    "Target audience segments based on trading behavior",
+                    "Monitor engagement metrics and conversion rates",
+                    "Iterate based on performance data"
+                ]
+            };
+        }
+        
+        function generateAgitationMessage(painPoint) {
+            if (painPoint.includes('fomo') || painPoint.includes('missing')) {
+                return "While others profit from 100x leverage, you're stuck with basic trading tools";
+            } else if (painPoint.includes('access') || painPoint.includes('restricted')) {
+                return "Tired of being locked out of the trading opportunities everyone else enjoys?";
+            } else {
+                return "Watching others make gains you can't access? The frustration ends here";
+            }
+        }
+        
+        function generateSolutionMessage(painPoint) {
+            if (painPoint.includes('leverage') || painPoint.includes('futures')) {
+                return "Finally, legal access to the advanced trading tools you've been wanting";
+            } else if (painPoint.includes('crypto') || painPoint.includes('perpetual')) {
+                return "Trade crypto futures legally without VPNs or offshore workarounds";
+            } else {
+                return "Get access to professional trading tools without the restrictions";
+            }
+        }
+        
+        function generateOutcomeMessage(painPoint) {
+            if (painPoint.includes('profit') || painPoint.includes('gains')) {
+                return "Join successful traders who've unlocked their full profit potential";
+            } else if (painPoint.includes('equal') || painPoint.includes('fair')) {
+                return "Level the playing field - trade with the same tools as global traders";
+            } else {
+                return "Stop settling for less - access the trading opportunities you deserve";
+            }
+        }
+        
+        function clearForm() {
+            document.getElementById('scriptForm').reset();
+            document.getElementById('outputSection').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
