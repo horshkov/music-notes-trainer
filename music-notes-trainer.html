@@ -72,11 +72,12 @@
         .staff-container {
             position: relative;
             width: 100%;
-            height: 280px;
+            height: 400px; /* Increased height for better spacing */
             background: white;
             border-radius: 10px;
             margin: 20px 0;
-            overflow: hidden;
+            overflow: visible; /* Allow tap areas to extend slightly */
+            padding: 20px 0; /* Add padding for tap areas */
         }
 
         .staff-lines {
@@ -105,7 +106,7 @@
         .note-button {
             position: absolute;
             width: 100%;
-            height: 7%;
+            min-height: 44px; /* iOS minimum tap target */
             background: transparent;
             border: none;
             cursor: pointer;
@@ -113,29 +114,52 @@
             transform: translateY(-50%);
             transition: all 0.3s;
             z-index: 10;
+            -webkit-tap-highlight-color: transparent; /* Remove iOS tap highlight */
         }
         
+        /* Visual indicator for note position */
         .note-button::before {
             content: '';
             position: absolute;
-            width: 35px;
-            height: 28px;
+            width: 32px;
+            height: 24px;
             border-radius: 50%;
             background: transparent;
-            border: 3px solid transparent;
+            border: 2px solid transparent;
             left: 50%;
             top: 50%;
             transform: translate(-50%, -50%);
             transition: all 0.3s;
-        }
-
-        .note-button:hover {
-            background: rgba(118, 75, 162, 0.05);
+            pointer-events: none;
         }
         
-        .note-button:hover::before {
-            background: rgba(118, 75, 162, 0.2);
+        /* Debug mode - shows tap areas (remove in production) */
+        .note-button.debug {
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px dashed rgba(255, 0, 0, 0.3);
+        }
+
+        /* Touch feedback for mobile */
+        .note-button:active {
+            background: rgba(118, 75, 162, 0.08);
+        }
+        
+        .note-button:active::before {
+            background: rgba(118, 75, 162, 0.3);
             border-color: #764ba2;
+            transform: translate(-50%, -50%) scale(1.2);
+        }
+        
+        /* Desktop hover state */
+        @media (hover: hover) {
+            .note-button:hover {
+                background: rgba(118, 75, 162, 0.05);
+            }
+            
+            .note-button:hover::before {
+                background: rgba(118, 75, 162, 0.2);
+                border-color: #764ba2;
+            }
         }
 
         .note-button.correct::before {
@@ -283,37 +307,37 @@
             <div class="staff-container">
                 <div class="clef-indicator">𝄞</div>
                 <div class="staff-lines">
-                    <!-- Staff lines (E, G, B, D, F from bottom to top) - adjusted for new height -->
-                    <div class="staff-line" style="top: 73%;"></div>
-                    <div class="staff-line" style="top: 59%;"></div>
-                    <div class="staff-line" style="top: 45%;"></div>
-                    <div class="staff-line" style="top: 31%;"></div>
-                    <div class="staff-line" style="top: 17%;"></div>
+                    <!-- Staff lines (E, G, B, D, F from bottom to top) - properly spaced -->
+                    <div class="staff-line" style="top: 70%;"></div>
+                    <div class="staff-line" style="top: 58%;"></div>
+                    <div class="staff-line" style="top: 46%;"></div>
+                    <div class="staff-line" style="top: 34%;"></div>
+                    <div class="staff-line" style="top: 22%;"></div>
                     
                     <!-- Ledger lines (will be shown/hidden as needed) -->
                     <div class="ledger-line" id="ledger-above-1" style="top: 5%;"></div>
                     <div class="ledger-line" id="ledger-below-1" style="top: 95%;"></div>
                 </div>
                 
-                <!-- Note placement buttons with better spacing for mobile -->
+                <!-- Note placement with iOS-optimized 44px minimum tap targets -->
                 <!-- Above staff -->
-                <button class="note-button" data-note="G" data-octave="5" style="top: 3%;"></button>
-                <button class="note-button" data-note="F" data-octave="5" style="top: 10%;"></button>
+                <button class="note-button" data-note="G" data-octave="5" style="top: 10%;"></button>
+                <button class="note-button" data-note="F" data-octave="5" style="top: 16%;"></button>
                 
-                <!-- On staff lines - more spacing -->
-                <button class="note-button" data-note="E" data-octave="5" style="top: 17%;"></button>
-                <button class="note-button" data-note="D" data-octave="5" style="top: 24%;"></button>
-                <button class="note-button" data-note="C" data-octave="5" style="top: 31%;"></button>
-                <button class="note-button" data-note="B" data-octave="4" style="top: 38%;"></button>
-                <button class="note-button" data-note="A" data-octave="4" style="top: 45%;"></button>
+                <!-- On staff lines with proper spacing -->
+                <button class="note-button" data-note="E" data-octave="5" style="top: 22%;"></button>
+                <button class="note-button" data-note="D" data-octave="5" style="top: 28%;"></button>
+                <button class="note-button" data-note="C" data-octave="5" style="top: 34%;"></button>
+                <button class="note-button" data-note="B" data-octave="4" style="top: 40%;"></button>
+                <button class="note-button" data-note="A" data-octave="4" style="top: 46%;"></button>
                 <button class="note-button" data-note="G" data-octave="4" style="top: 52%;"></button>
-                <button class="note-button" data-note="F" data-octave="4" style="top: 59%;"></button>
-                <button class="note-button" data-note="E" data-octave="4" style="top: 66%;"></button>
-                <button class="note-button" data-note="D" data-octave="4" style="top: 73%;"></button>
+                <button class="note-button" data-note="F" data-octave="4" style="top: 58%;"></button>
+                <button class="note-button" data-note="E" data-octave="4" style="top: 64%;"></button>
+                <button class="note-button" data-note="D" data-octave="4" style="top: 70%;"></button>
                 
                 <!-- Below staff -->
-                <button class="note-button" data-note="C" data-octave="4" style="top: 80%;"></button>
-                <button class="note-button" data-note="B" data-octave="3" style="top: 87%;"></button>
+                <button class="note-button" data-note="C" data-octave="4" style="top: 76%;"></button>
+                <button class="note-button" data-note="B" data-octave="3" style="top: 82%;"></button>
             </div>
 
             <div class="feedback" id="feedback"></div>
