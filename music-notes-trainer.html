@@ -319,25 +319,27 @@
                     <div class="ledger-line" id="ledger-below-1" style="top: 95%;"></div>
                 </div>
                 
-                <!-- Note placement with iOS-optimized 44px minimum tap targets -->
-                <!-- Above staff -->
-                <button class="note-button" data-note="G" data-octave="5" style="top: 10%;"></button>
-                <button class="note-button" data-note="F" data-octave="5" style="top: 16%;"></button>
+                <!-- Note placement with correct music theory positions -->
+                <!-- Above staff (ledger lines) -->
+                <button class="note-button" data-note="A" data-octave="5" style="top: 10%;"></button>
+                <button class="note-button" data-note="G" data-octave="5" style="top: 16%;"></button>
                 
-                <!-- On staff lines with proper spacing -->
-                <button class="note-button" data-note="E" data-octave="5" style="top: 22%;"></button>
-                <button class="note-button" data-note="D" data-octave="5" style="top: 28%;"></button>
-                <button class="note-button" data-note="C" data-octave="5" style="top: 34%;"></button>
-                <button class="note-button" data-note="B" data-octave="4" style="top: 40%;"></button>
-                <button class="note-button" data-note="A" data-octave="4" style="top: 46%;"></button>
-                <button class="note-button" data-note="G" data-octave="4" style="top: 52%;"></button>
-                <button class="note-button" data-note="F" data-octave="4" style="top: 58%;"></button>
-                <button class="note-button" data-note="E" data-octave="4" style="top: 64%;"></button>
-                <button class="note-button" data-note="D" data-octave="4" style="top: 70%;"></button>
+                <!-- Top line and above -->
+                <button class="note-button" data-note="F" data-octave="5" style="top: 22%;"></button>
+                <button class="note-button" data-note="E" data-octave="5" style="top: 28%;"></button>
+                
+                <!-- Staff proper (lines and spaces) -->
+                <button class="note-button" data-note="D" data-octave="5" style="top: 34%;"></button>
+                <button class="note-button" data-note="C" data-octave="5" style="top: 40%;"></button>
+                <button class="note-button" data-note="B" data-octave="4" style="top: 46%;"></button>
+                <button class="note-button" data-note="A" data-octave="4" style="top: 52%;"></button>
+                <button class="note-button" data-note="G" data-octave="4" style="top: 58%;"></button>
+                <button class="note-button" data-note="F" data-octave="4" style="top: 64%;"></button>
+                <button class="note-button" data-note="E" data-octave="4" style="top: 70%;"></button>
                 
                 <!-- Below staff -->
-                <button class="note-button" data-note="C" data-octave="4" style="top: 76%;"></button>
-                <button class="note-button" data-note="B" data-octave="3" style="top: 82%;"></button>
+                <button class="note-button" data-note="D" data-octave="4" style="top: 76%;"></button>
+                <button class="note-button" data-note="C" data-octave="4" style="top: 82%;"></button>
             </div>
 
             <div class="feedback" id="feedback"></div>
@@ -379,7 +381,7 @@
 
         // Note ranges for different levels
         const levels = {
-            1: { // Beginner - Middle C area
+            1: { // Beginner - Middle C to C5
                 notes: [
                     { note: 'C', octave: 4 },
                     { note: 'D', octave: 4 },
@@ -393,7 +395,6 @@
             },
             2: { // Intermediate - Extended range
                 notes: [
-                    { note: 'B', octave: 3 },
                     { note: 'C', octave: 4 },
                     { note: 'D', octave: 4 },
                     { note: 'E', octave: 4 },
@@ -407,9 +408,8 @@
                     { note: 'F', octave: 5 }
                 ]
             },
-            3: { // Maestro - Full range with ledger lines
+            3: { // Maestro - Full range including ledger lines
                 notes: [
-                    { note: 'B', octave: 3 },
                     { note: 'C', octave: 4 },
                     { note: 'D', octave: 4 },
                     { note: 'E', octave: 4 },
@@ -421,7 +421,8 @@
                     { note: 'D', octave: 5 },
                     { note: 'E', octave: 5 },
                     { note: 'F', octave: 5 },
-                    { note: 'G', octave: 5 }
+                    { note: 'G', octave: 5 },
+                    { note: 'A', octave: 5 }
                 ]
             }
         };
@@ -461,13 +462,14 @@
             const ledgerBelow = document.getElementById('ledger-below-1');
             
             // Show ledger lines for notes that need them
-            if (currentNote.note === 'G' && currentNote.octave === 5) {
+            if ((currentNote.note === 'G' && currentNote.octave === 5) || 
+                (currentNote.note === 'A' && currentNote.octave === 5)) {
                 ledgerAbove.style.display = 'block';
             } else {
                 ledgerAbove.style.display = 'none';
             }
             
-            if (currentNote.note === 'B' && currentNote.octave === 3) {
+            if (currentNote.note === 'C' && currentNote.octave === 4) {
                 ledgerBelow.style.display = 'block';
             } else {
                 ledgerBelow.style.display = 'none';
