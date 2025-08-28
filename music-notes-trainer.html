@@ -126,32 +126,33 @@
             display: none;
         }
 
-        /* New positioning system from scratch */
+        /* Simple positioning - button centered on line position */
         .note-button {
             position: absolute;
             width: 100%;
-            height: 60px; /* Larger tap target */
+            height: 50px; /* Tap target size */
             background: transparent;
             border: none;
             cursor: pointer;
             left: 0;
             z-index: 10;
             -webkit-tap-highlight-color: transparent;
-            /* No transforms, no centering tricks - just absolute positioning */
         }
         
-        /* Visual feedback indicator */
+        /* Visual note circle - perfectly centered */
         .note-indicator {
             position: absolute;
-            width: 40px;
+            width: 30px;
             height: 30px;
             border-radius: 50%;
             background: transparent;
-            border: 2px solid transparent;
+            border: 3px solid transparent;
+            /* Center horizontally */
             left: 50%;
+            margin-left: -15px; /* Half of 30px width */
+            /* Center vertically in button */
             top: 50%;
-            margin-left: -20px; /* Half of width */
-            margin-top: -15px; /* Half of height */
+            margin-top: -15px; /* Half of 30px height */
             transition: all 0.3s;
             pointer-events: none;
         }
@@ -369,63 +370,63 @@
                     <div class="ledger-line" id="ledger-below-1" style="top: 95%;"></div>
                 </div>
                 
-                <!-- Fresh positioning: Lines at 22%, 34%, 46%, 58%, 70% -->
-                <!-- Each button positioned so its center aligns with the target -->
+                <!-- Perfect line centering: button height = 50px, offset = 25px -->
+                <!-- Staff lines are at: 22%, 34%, 46%, 58%, 70% -->
                 
                 <!-- Above staff -->
-                <button class="note-button" data-note="A" data-octave="5" style="top: calc(10% - 30px);">
+                <button class="note-button" data-note="A" data-octave="5" style="top: calc(10% - 25px);">
                     <span class="note-indicator"></span>
                 </button>
-                <button class="note-button" data-note="G" data-octave="5" style="top: calc(16% - 30px);">
+                <button class="note-button" data-note="G" data-octave="5" style="top: calc(16% - 25px);">
                     <span class="note-indicator"></span>
                 </button>
                 
-                <!-- Staff lines and spaces -->
-                <!-- F5 on top line (22%) -->
-                <button class="note-button" data-note="F" data-octave="5" style="top: calc(22% - 30px);">
+                <!-- On staff - perfectly centered on lines -->
+                <!-- F5 on top line at 22% -->
+                <button class="note-button" data-note="F" data-octave="5" style="top: calc(22% - 25px);">
                     <span class="note-indicator"></span>
                 </button>
-                <!-- E5 in space -->
-                <button class="note-button" data-note="E" data-octave="5" style="top: calc(28% - 30px);">
+                <!-- E5 in space between lines -->
+                <button class="note-button" data-note="E" data-octave="5" style="top: calc(28% - 25px);">
                     <span class="note-indicator"></span>
                 </button>
-                <!-- D5 on line (34%) -->
-                <button class="note-button" data-note="D" data-octave="5" style="top: calc(34% - 30px);">
+                <!-- D5 on line at 34% -->
+                <button class="note-button" data-note="D" data-octave="5" style="top: calc(34% - 25px);">
                     <span class="note-indicator"></span>
                 </button>
-                <!-- C5 in space -->
-                <button class="note-button" data-note="C" data-octave="5" style="top: calc(40% - 30px);">
+                <!-- C5 in space between lines -->
+                <button class="note-button" data-note="C" data-octave="5" style="top: calc(40% - 25px);">
                     <span class="note-indicator"></span>
                 </button>
-                <!-- B4 on middle line (46%) -->
-                <button class="note-button" data-note="B" data-octave="4" style="top: calc(46% - 30px);">
+                <!-- B4 on middle line at 46% -->
+                <button class="note-button" data-note="B" data-octave="4" style="top: calc(46% - 25px);">
                     <span class="note-indicator"></span>
                 </button>
-                <!-- A4 in space -->
-                <button class="note-button" data-note="A" data-octave="4" style="top: calc(52% - 30px);">
+                <!-- A4 in space between lines -->
+                <button class="note-button" data-note="A" data-octave="4" style="top: calc(52% - 25px);">
                     <span class="note-indicator"></span>
                 </button>
-                <!-- G4 on line (58%) -->
-                <button class="note-button" data-note="G" data-octave="4" style="top: calc(58% - 30px);">
+                <!-- G4 on line at 58% -->
+                <button class="note-button" data-note="G" data-octave="4" style="top: calc(58% - 25px);">
                     <span class="note-indicator"></span>
                 </button>
-                <!-- F4 in space -->
-                <button class="note-button" data-note="F" data-octave="4" style="top: calc(64% - 30px);">
+                <!-- F4 in space between lines -->
+                <button class="note-button" data-note="F" data-octave="4" style="top: calc(64% - 25px);">
                     <span class="note-indicator"></span>
                 </button>
-                <!-- E4 on bottom line (70%) -->
-                <button class="note-button" data-note="E" data-octave="4" style="top: calc(70% - 30px);">
+                <!-- E4 on bottom line at 70% -->
+                <button class="note-button" data-note="E" data-octave="4" style="top: calc(70% - 25px);">
                     <span class="note-indicator"></span>
                 </button>
                 
                 <!-- Below staff -->
-                <button class="note-button" data-note="D" data-octave="4" style="top: calc(76% - 30px);">
+                <button class="note-button" data-note="D" data-octave="4" style="top: calc(76% - 25px);">
                     <span class="note-indicator"></span>
                 </button>
-                <button class="note-button" data-note="C" data-octave="4" style="top: calc(82% - 30px);">
+                <button class="note-button" data-note="C" data-octave="4" style="top: calc(82% - 25px);">
                     <span class="note-indicator"></span>
                 </button>
-                <button class="note-button" data-note="B" data-octave="3" style="top: calc(88% - 30px);">
+                <button class="note-button" data-note="B" data-octave="3" style="top: calc(88% - 25px);">
                     <span class="note-indicator"></span>
                 </button>
             </div>
