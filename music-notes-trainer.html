@@ -358,7 +358,7 @@
                     </select>
                 </div>
                 <div class="note-display" id="note">C</div>
-                <p style="color: #999; font-size: 14px;">Click on the staff where this note should be placed</p>
+                <p id="instructions" style="color: #999; font-size: 14px;">Click on the staff where this note should be placed</p>
             </div>
 
             <div class="staff-container">
@@ -444,6 +444,7 @@
         let stats = { correct: 0, wrong: 0, streak: 0 };
         let answered = false;
         let selectedOctave = '4'; // Default to octave 4
+        let totalClicks = 0; // Track total clicks to hide instructions
 
         // Note ranges for different levels
         const levels = {
@@ -563,6 +564,13 @@
             if (answered) return;
             
             answered = true;
+            totalClicks++;
+            
+            // Hide instructions after 3 clicks
+            if (totalClicks >= 3) {
+                document.getElementById('instructions').style.display = 'none';
+            }
+            
             const isCorrect = selectedNote === currentNote.note && selectedOctave === currentNote.octave;
             
             const feedback = document.getElementById('feedback');
