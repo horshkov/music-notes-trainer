@@ -218,7 +218,17 @@
             border-radius: 10px;
             margin: 10px 0;
             font-weight: bold;
-            display: none;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            visibility: hidden;
+            background: transparent;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .feedback.show {
+            visibility: visible;
         }
 
         .feedback.correct {
@@ -527,7 +537,9 @@
             
             // Reset UI
             answered = false;
-            document.getElementById('feedback').style.display = 'none';
+            const feedback = document.getElementById('feedback');
+            feedback.classList.remove('show', 'correct', 'wrong');
+            feedback.textContent = '';
             document.getElementById('nextBtn').style.display = 'none';
             
             // Reset note buttons
@@ -578,7 +590,7 @@
             if (isCorrect) {
                 button.classList.add('correct');
                 feedback.textContent = 'Correct! Well done!';
-                feedback.className = 'feedback correct';
+                feedback.classList.add('show', 'correct');
                 stats.correct++;
                 stats.streak++;
                 
@@ -589,7 +601,7 @@
             } else {
                 button.classList.add('wrong');
                 feedback.textContent = `Wrong! You selected ${selectedNote}${selectedOctave}. The correct answer is ${currentNote.note}${currentNote.octave}`;
-                feedback.className = 'feedback wrong';
+                feedback.classList.add('show', 'wrong');
                 stats.wrong++;
                 stats.streak = 0;
                 
@@ -607,7 +619,6 @@
                 }, 2500);
             }
             
-            feedback.style.display = 'block';
             updateStats();
         }
 
