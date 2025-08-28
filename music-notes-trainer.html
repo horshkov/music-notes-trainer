@@ -126,7 +126,7 @@
             display: none;
         }
 
-        /* Simple positioning - button centered on line position */
+        /* Button positioned so its center aligns with line */
         .note-button {
             position: absolute;
             width: 100%;
@@ -137,9 +137,11 @@
             left: 0;
             z-index: 10;
             -webkit-tap-highlight-color: transparent;
+            /* For debugging: uncomment to see button areas */
+            /* background: rgba(255, 0, 0, 0.1); */
         }
         
-        /* Visual note circle - perfectly centered */
+        /* Visual note circle - must be bisected by line */
         .note-indicator {
             position: absolute;
             width: 30px;
@@ -149,10 +151,10 @@
             border: 3px solid transparent;
             /* Center horizontally */
             left: 50%;
-            margin-left: -15px; /* Half of 30px width */
-            /* Center vertically in button */
-            top: 50%;
-            margin-top: -15px; /* Half of 30px height */
+            transform: translateX(-50%);
+            /* Position at center of button = at the line */
+            top: 25px; /* Half of 50px button height */
+            margin-top: -15px; /* Pull up by half of circle height to center on line */
             transition: all 0.3s;
             pointer-events: none;
         }
@@ -162,6 +164,19 @@
             .note-button:hover .note-indicator {
                 background: rgba(118, 75, 162, 0.2);
                 border-color: #764ba2;
+            }
+            
+            /* Visual guide to verify centering */
+            .note-button:hover .note-indicator::after {
+                content: '';
+                position: absolute;
+                width: 100%;
+                height: 1px;
+                background: rgba(255, 0, 0, 0.5);
+                left: 0;
+                top: 50%;
+                transform: translateY(-50%);
+                pointer-events: none;
             }
         }
         
