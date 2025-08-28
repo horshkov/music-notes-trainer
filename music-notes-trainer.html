@@ -35,7 +35,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 20px;
+            padding: 10px;
             color: #333;
         }
 
@@ -46,6 +46,9 @@
             border-radius: 20px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.1);
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: calc(100vh - 20px);
         }
 
         .header {
@@ -61,40 +64,43 @@
         }
 
         .game-area {
-            padding: 20px;
-            min-height: 400px;
+            padding: 15px 10px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
         }
 
         .question-card {
             background: #f8f9fa;
             border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
+            padding: 15px;
+            margin-bottom: 15px;
             text-align: center;
         }
 
         .note-display {
-            font-size: 48px;
+            font-size: 42px;
             font-weight: bold;
             color: #667eea;
-            margin: 20px 0;
+            margin: 15px 0;
         }
 
         .octave-display {
-            font-size: 18px;
+            font-size: 16px;
             color: #666;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         .staff-container {
             position: relative;
             width: 100%;
-            height: 400px; /* Increased height for better spacing */
+            flex: 1;
+            min-height: 350px;
             background: white;
             border-radius: 10px;
-            margin: 20px 0;
-            overflow: visible; /* Allow tap areas to extend slightly */
-            padding: 20px 0; /* Add padding for tap areas */
+            margin: 10px 0;
+            overflow: visible;
+            padding: 15px 0;
         }
 
         .staff-lines {
@@ -208,9 +214,9 @@
 
         .feedback {
             text-align: center;
-            padding: 15px;
+            padding: 12px;
             border-radius: 10px;
-            margin: 15px 0;
+            margin: 10px 0;
             font-weight: bold;
             display: none;
         }
@@ -229,10 +235,11 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px;
+            padding: 12px;
             background: #f8f9fa;
             border-radius: 10px;
-            margin-top: 20px;
+            margin-top: auto;
+            margin-bottom: 10px;
         }
         
         .stats-numbers {
@@ -301,13 +308,34 @@
         }
 
         @media (max-width: 480px) {
+            body {
+                padding: 0;
+            }
+            
             .container {
                 border-radius: 0;
                 min-height: 100vh;
+                max-width: 100%;
+            }
+            
+            .game-area {
+                padding: 10px;
             }
             
             .note-display {
                 font-size: 36px;
+            }
+            
+            .staff-container {
+                margin: 5px 0;
+                padding: 10px 0;
+            }
+            
+            /* iPhone 13 Pro specific (390x844px) */
+            @media (width: 390px) and (height: 844px) {
+                .staff-container {
+                    min-height: 420px;
+                }
             }
         }
     </style>
