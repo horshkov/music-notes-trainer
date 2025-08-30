@@ -502,7 +502,7 @@
                     { note: 'C', octave: 5 }
                 ]
             },
-            2: { // Intermediate - Extended range
+            2: { // Intermediate - Extended range (now includes G5)
                 notes: [
                     { note: 'C', octave: 4 },
                     { note: 'D', octave: 4 },
@@ -514,7 +514,8 @@
                     { note: 'C', octave: 5 },
                     { note: 'D', octave: 5 },
                     { note: 'E', octave: 5 },
-                    { note: 'F', octave: 5 }
+                    { note: 'F', octave: 5 },
+                    { note: 'G', octave: 5 } // Added G5
                 ]
             },
             3: { // Maestro - Full range including ledger lines
@@ -529,13 +530,14 @@
                     { note: 'G', octave: 4 },
                     { note: 'A', octave: 4 },
                     { note: 'B', octave: 4 },
-                    // Octave 5
+                    // Octave 5 - all notes including ledger lines
                     { note: 'C', octave: 5 },
                     { note: 'D', octave: 5 },
                     { note: 'E', octave: 5 },
                     { note: 'F', octave: 5 },
                     { note: 'G', octave: 5 },
-                    { note: 'A', octave: 5 }
+                    { note: 'A', octave: 5 },
+                    { note: 'B', octave: 5 } // Added B5 (though not on staff)
                 ]
             }
         };
@@ -553,11 +555,24 @@
             // Filter by selected octave if not "all"
             if (selectedOctave !== 'all') {
                 const octaveNum = parseInt(selectedOctave);
-                levelNotes = levelNotes.filter(note => note.octave === octaveNum);
                 
-                // If no notes available for this octave in current level, use all notes for that octave
-                if (levelNotes.length === 0) {
-                    levelNotes = levels[3].notes.filter(note => note.octave === octaveNum);
+                // For Octave 5, always use all available Octave 5 notes including G and A
+                if (octaveNum === 5) {
+                    levelNotes = [
+                        { note: 'C', octave: 5 },
+                        { note: 'D', octave: 5 },
+                        { note: 'E', octave: 5 },
+                        { note: 'F', octave: 5 },
+                        { note: 'G', octave: 5 },
+                        { note: 'A', octave: 5 }
+                    ];
+                } else {
+                    levelNotes = levelNotes.filter(note => note.octave === octaveNum);
+                    
+                    // If no notes available for this octave in current level, use all notes for that octave
+                    if (levelNotes.length === 0) {
+                        levelNotes = levels[3].notes.filter(note => note.octave === octaveNum);
+                    }
                 }
             }
             
