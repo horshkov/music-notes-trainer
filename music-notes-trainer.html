@@ -61,6 +61,116 @@
         .header h1 {
             font-size: 22px;
             margin: 0;
+            margin-bottom: 10px;
+        }
+        
+        .mode-tabs {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        
+        .mode-tab {
+            padding: 8px 20px;
+            background: transparent;
+            color: white;
+            border: 2px solid rgba(255,255,255,0.5);
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        
+        .mode-tab.active {
+            background: white;
+            color: #667eea;
+            border-color: white;
+        }
+        
+        .mode-tab:hover:not(.active) {
+            background: rgba(255,255,255,0.1);
+            border-color: white;
+        }
+        
+        .letter-buttons {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .letter-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .letter-btn:hover {
+            background: #667eea;
+            color: white;
+            transform: scale(1.1);
+        }
+        
+        .letter-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .letter-btn.correct {
+            background: #4caf50;
+            color: white;
+            border-color: #4caf50;
+            animation: letter-pulse 0.5s;
+        }
+        
+        .letter-btn.incorrect {
+            background: #f44336;
+            color: white;
+            border-color: #f44336;
+            animation: letter-shake 0.5s;
+        }
+        
+        @keyframes letter-pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+        
+        @keyframes letter-shake {
+            0%, 100% { transform: rotate(0); }
+            25% { transform: rotate(-5deg); }
+            75% { transform: rotate(5deg); }
+        }
+        
+        .identify-note {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #667eea;
+            transform: translateX(-50%);
+            z-index: 10;
+            pointer-events: none;
+        }
+        
+        .identify-note.with-ledger::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50px;
+            height: 2px;
+            background: #333;
         }
 
         .game-area {
@@ -94,15 +204,13 @@
         .staff-container {
             position: relative;
             width: 100%;
-            flex: 1;
-            min-height: 350px;
+            flex-shrink: 0; /* Prevent shrinking */
+            height: 350px; /* Fixed height */
             background: white;
             border-radius: 10px;
             margin: 10px 0;
             overflow: visible;
             /* NO PADDING - this was causing misalignment */
-            /* Prevent layout shifts */
-            flex-shrink: 0;
         }
 
         .staff-lines {
@@ -219,18 +327,18 @@
             border-radius: 10px;
             margin: 10px 0;
             font-weight: bold;
-            height: 50px; /* Fixed height to prevent shifts */
+            min-height: 50px; /* Min height to prevent collapse */
             overflow: hidden; /* Prevent text overflow */
             display: flex;
             align-items: center;
             justify-content: center;
-            visibility: hidden;
+            opacity: 0;
             background: transparent;
-            transition: background 0.3s, color 0.3s;
+            transition: opacity 0.3s, background 0.3s, color 0.3s;
         }
 
         .feedback.show {
-            visibility: visible;
+            opacity: 1;
         }
 
         .feedback.correct {
@@ -346,7 +454,7 @@
             /* iPhone 13 Pro specific (390x844px) */
             @media (width: 390px) and (height: 844px) {
                 .staff-container {
-                    min-height: 420px;
+                    height: 420px; /* Fixed height for iPhone */
                 }
             }
         }
@@ -356,10 +464,15 @@
     <div class="container">
         <div class="header">
             <h1>🎵 Music Notes Trainer</h1>
+            <div class="mode-tabs">
+                <button class="mode-tab active" data-mode="place">Place Notes</button>
+                <button class="mode-tab" data-mode="identify">Identify Notes</button>
+            </div>
         </div>
 
         <div class="game-area">
-            <div class="question-card">
+            <!-- Place Notes Mode -->
+            <div class="question-card" id="placeMode">
                 <div class="octave-display">
                     Octave: <span id="octave">4</span>
                     <select id="octaveSelect" style="margin-left: 10px; padding: 4px 8px; border: 2px solid #667eea; border-radius: 6px; background: white; color: #667eea; font-weight: bold; cursor: pointer;">
@@ -371,6 +484,20 @@
                 </div>
                 <div class="note-display" id="note">C</div>
                 <p id="instructions" style="color: #999; font-size: 14px;">Click on the staff where this note should be placed</p>
+            </div>
+            
+            <!-- Identify Notes Mode -->
+            <div class="question-card" id="identifyMode" style="display: none;">
+                <p style="color: #666; font-size: 16px; margin: 10px 0;">What note is this?</p>
+                <div class="letter-buttons">
+                    <button class="letter-btn" data-note="C">C</button>
+                    <button class="letter-btn" data-note="D">D</button>
+                    <button class="letter-btn" data-note="E">E</button>
+                    <button class="letter-btn" data-note="F">F</button>
+                    <button class="letter-btn" data-note="G">G</button>
+                    <button class="letter-btn" data-note="A">A</button>
+                    <button class="letter-btn" data-note="B">B</button>
+                </div>
             </div>
 
             <div class="staff-container">
@@ -481,12 +608,14 @@
 
     <script>
         // Game state
+        let currentMode = 'place'; // 'place' or 'identify'
         let currentLevel = 2; // Default to Intermediate
         let currentNote = { note: 'C', octave: 4 };
         let stats = { correct: 0, wrong: 0, streak: 0 };
         let answered = false;
         let selectedOctave = '4'; // Default to octave 4
         let totalClicks = 0; // Track total clicks to hide instructions
+        let identifyNoteElement = null; // Reference to the displayed note in identify mode
 
         // Note ranges for different levels
         const levels = {
@@ -546,14 +675,151 @@
         function init() {
             generateNewNote();
             attachEventListeners();
+            attachModeListeners();
+        }
+        
+        // Handle mode switching
+        function switchMode(mode) {
+            currentMode = mode;
+            
+            // Update tab appearance
+            document.querySelectorAll('.mode-tab').forEach(tab => {
+                tab.classList.toggle('active', tab.dataset.mode === mode);
+            });
+            
+            // Show/hide appropriate UI
+            const placeMode = document.getElementById('placeMode');
+            const identifyMode = document.getElementById('identifyMode');
+            
+            if (mode === 'place') {
+                placeMode.style.display = 'block';
+                identifyMode.style.display = 'none';
+                // Hide any identify mode notes
+                if (identifyNoteElement) {
+                    identifyNoteElement.remove();
+                    identifyNoteElement = null;
+                }
+            } else {
+                placeMode.style.display = 'none';
+                identifyMode.style.display = 'block';
+                displayNoteOnStaff();
+            }
+            
+            // Reset game state
+            answered = false;
+            clearFeedback();
+            hideAllCircles();
+            generateNewNote();
+        }
+        
+        // Display note on staff for identify mode
+        function displayNoteOnStaff() {
+            // Remove existing note if any
+            if (identifyNoteElement) {
+                identifyNoteElement.remove();
+            }
+            
+            // Create new note element
+            identifyNoteElement = document.createElement('div');
+            identifyNoteElement.className = 'identify-note';
+            
+            // Find the position for this note
+            const noteButton = document.querySelector(
+                `.note-button[data-note="${currentNote.note}"][data-octave="${currentNote.octave}"]`
+            );
+            
+            if (noteButton) {
+                // The button uses calc(X% - 25px) to center a 50px element
+                // For the 30px identify-note, we need calc(X% - 15px) to center it
+                const buttonTop = noteButton.style.top;
+                // Extract the percentage from "calc(X% - 25px)"
+                const match = buttonTop.match(/calc\((.+?)% - 25px\)/);
+                if (match) {
+                    const percentage = match[1];
+                    // Center the 30px note circle
+                    identifyNoteElement.style.top = `calc(${percentage}% - 15px)`;
+                } else {
+                    // Fallback if format is different
+                    identifyNoteElement.style.top = buttonTop;
+                }
+                identifyNoteElement.style.left = '50%';
+                
+                // Add ledger line class if needed
+                if ((currentNote.note === 'C' && currentNote.octave === 4) ||
+                    (currentNote.note === 'A' && currentNote.octave === 5)) {
+                    identifyNoteElement.classList.add('with-ledger');
+                }
+                
+                document.querySelector('.staff-lines').appendChild(identifyNoteElement);
+            }
+        }
+        
+        // Attach mode listeners
+        function attachModeListeners() {
+            document.querySelectorAll('.mode-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    switchMode(tab.dataset.mode);
+                });
+            });
+            
+            // Letter button listeners for identify mode
+            document.querySelectorAll('.letter-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    if (currentMode === 'identify') {
+                        checkIdentifyAnswer(btn.dataset.note, btn);
+                    }
+                });
+            });
+        }
+        
+        // Check answer in identify mode
+        function checkIdentifyAnswer(selectedNote, buttonElement) {
+            if (answered) return; // Prevent multiple clicks
+            answered = true;
+            const isCorrect = selectedNote === currentNote.note;
+            
+            // Update button appearance
+            buttonElement.classList.add(isCorrect ? 'correct' : 'incorrect');
+            
+            // Update stats
+            if (isCorrect) {
+                stats.correct++;
+                stats.streak++;
+                showFeedback('Correct! 🎉', 'success');
+            } else {
+                stats.wrong++;
+                stats.streak = 0;
+                showFeedback(`That was ${currentNote.note}${currentNote.octave}`, 'error');
+                // Highlight the correct answer
+                const correctButton = document.querySelector(`.letter-btn[data-note="${currentNote.note}"]`);
+                if (correctButton) {
+                    correctButton.classList.add('correct');
+                }
+            }
+            
+            updateStats();
+            
+            // Disable all buttons during transition
+            document.querySelectorAll('.letter-btn').forEach(btn => {
+                btn.style.pointerEvents = 'none';
+            });
+            
+            // Auto-proceed to next note after a delay
+            setTimeout(() => {
+                // Re-enable buttons
+                document.querySelectorAll('.letter-btn').forEach(btn => {
+                    btn.style.pointerEvents = '';
+                });
+                generateNewNote();
+            }, 1500);
         }
 
         // Generate new note
         function generateNewNote() {
             let levelNotes = levels[currentLevel].notes;
             
-            // Filter by selected octave if not "all"
-            if (selectedOctave !== 'all') {
+            // Filter by selected octave if not "all" (only in place mode)
+            if (currentMode === 'place' && selectedOctave !== 'all') {
                 const octaveNum = parseInt(selectedOctave);
                 
                 // For Octave 5, always use all available Octave 5 notes including G and A
@@ -579,20 +845,31 @@
             const randomIndex = Math.floor(Math.random() * levelNotes.length);
             currentNote = levelNotes[randomIndex];
             
-            document.getElementById('note').textContent = currentNote.note;
-            document.getElementById('octave').textContent = currentNote.octave;
-            
-            // Reset UI
+            // Reset UI first
             answered = false;
             const feedback = document.getElementById('feedback');
             feedback.classList.remove('show', 'correct', 'wrong');
             feedback.textContent = '';
             document.getElementById('nextBtn').style.display = 'none';
             
-            // Reset note buttons
+            // Reset note buttons for place mode
             document.querySelectorAll('.note-button').forEach(btn => {
                 btn.classList.remove('correct', 'wrong');
             });
+            
+            // Reset letter buttons for identify mode
+            document.querySelectorAll('.letter-btn').forEach(btn => {
+                btn.classList.remove('correct', 'incorrect');
+            });
+            
+            // Update display based on mode
+            if (currentMode === 'place') {
+                document.getElementById('note').textContent = currentNote.note;
+                document.getElementById('octave').textContent = currentNote.octave;
+            } else if (currentMode === 'identify') {
+                // For identify mode, display the note on the staff
+                displayNoteOnStaff();
+            }
             
             // Update ledger lines visibility
             updateLedgerLines();
@@ -603,17 +880,24 @@
             const ledgerAbove = document.getElementById('ledger-above-1');
             const ledgerBelow = document.getElementById('ledger-below-1');
             
-            // Show ledger lines for notes that need them
-            if ((currentNote.note === 'G' && currentNote.octave === 5) || 
-                (currentNote.note === 'A' && currentNote.octave === 5)) {
-                ledgerAbove.style.display = 'block';
+            // Only show ledger lines in place mode or when note needs them in identify mode
+            if (currentMode === 'place') {
+                // Show ledger lines for notes that need them
+                if ((currentNote.note === 'G' && currentNote.octave === 5) || 
+                    (currentNote.note === 'A' && currentNote.octave === 5)) {
+                    ledgerAbove.style.display = 'block';
+                } else {
+                    ledgerAbove.style.display = 'none';
+                }
+                
+                if (currentNote.note === 'C' && currentNote.octave === 4) {
+                    ledgerBelow.style.display = 'block';
+                } else {
+                    ledgerBelow.style.display = 'none';
+                }
             } else {
+                // In identify mode, hide ledger lines (they're shown with the note if needed)
                 ledgerAbove.style.display = 'none';
-            }
-            
-            if (currentNote.note === 'C' && currentNote.octave === 4) {
-                ledgerBelow.style.display = 'block';
-            } else {
                 ledgerBelow.style.display = 'none';
             }
         }
@@ -675,7 +959,33 @@
             document.getElementById('wrong').textContent = stats.wrong;
             document.getElementById('streak').textContent = stats.streak;
         }
+        
+        // Show feedback message
+        function showFeedback(message, type) {
+            const feedback = document.getElementById('feedback');
+            feedback.textContent = message;
+            feedback.className = 'feedback show';
+            if (type === 'success') {
+                feedback.classList.add('correct');
+            } else if (type === 'error') {
+                feedback.classList.add('wrong');
+            }
+        }
 
+        // Clear feedback
+        function clearFeedback() {
+            const feedback = document.getElementById('feedback');
+            feedback.classList.remove('show', 'correct', 'wrong');
+            feedback.textContent = '';
+        }
+        
+        // Hide all circles
+        function hideAllCircles() {
+            document.querySelectorAll('.circle').forEach(circle => {
+                circle.style.display = 'none';
+            });
+        }
+        
         // Attach event listeners
         function attachEventListeners() {
             // Level dropdown
@@ -684,18 +994,20 @@
                 generateNewNote();
             });
             
-            // Octave selector
+            // Octave selector (only visible in place mode)
             document.getElementById('octaveSelect').addEventListener('change', function() {
                 selectedOctave = this.value;
                 generateNewNote();
             });
             
-            // Note buttons
+            // Note buttons (for place mode)
             document.querySelectorAll('.note-button').forEach(btn => {
                 btn.addEventListener('click', function() {
-                    const note = this.dataset.note;
-                    const octave = parseInt(this.dataset.octave);
-                    checkAnswer(note, octave, this);
+                    if (currentMode === 'place') {
+                        const note = this.dataset.note;
+                        const octave = parseInt(this.dataset.octave);
+                        checkAnswer(note, octave, this);
+                    }
                 });
             });
             
